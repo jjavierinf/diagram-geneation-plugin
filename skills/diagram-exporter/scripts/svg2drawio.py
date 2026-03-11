@@ -64,6 +64,59 @@ def contrast_font_color(fill_hex):
     return '#FFFFFF' if lum < 0.45 else '#000000'
 
 
+# ---------------------------------------------------------------------------
+# C4 model styles for Draw.io native C4 shapes
+# ---------------------------------------------------------------------------
+
+C4_STYLES = {
+    'person': 'shape=mxgraph.c4.person2;whiteSpace=wrap;html=1;fillColor=#08427B;fontColor=#ffffff;align=center;metaEdit=1;resizable=0;',
+    'external-person': 'shape=mxgraph.c4.person2;whiteSpace=wrap;html=1;fillColor=#686868;fontColor=#ffffff;align=center;metaEdit=1;resizable=0;',
+    'software-system': 'rounded=1;whiteSpace=wrap;html=1;fillColor=#1168BD;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E4D92;metaEdit=1;resizable=0;',
+    'external-system': 'rounded=1;whiteSpace=wrap;html=1;fillColor=#999999;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#8A8A8A;metaEdit=1;resizable=0;',
+    'container': 'rounded=1;whiteSpace=wrap;html=1;fillColor=#438DD5;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#3C7FC0;metaEdit=1;resizable=0;',
+    'container-db': 'shape=cylinder3;whiteSpace=wrap;html=1;size=15;fillColor=#438DD5;fontColor=#ffffff;align=center;strokeColor=#3C7FC0;metaEdit=1;resizable=0;',
+    'external-container': 'rounded=1;whiteSpace=wrap;html=1;fillColor=#B3B3B3;fontColor=#000000;align=center;arcSize=10;strokeColor=#A6A6A6;metaEdit=1;resizable=0;',
+    'component': 'rounded=1;whiteSpace=wrap;html=1;fillColor=#85BBF0;fontColor=#000000;align=center;arcSize=10;strokeColor=#78A8D8;metaEdit=1;resizable=0;',
+    'external-component': 'rounded=1;whiteSpace=wrap;html=1;fillColor=#CCCCCC;fontColor=#000000;align=center;arcSize=10;strokeColor=#BFBFBF;metaEdit=1;resizable=0;',
+    'boundary': 'rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;dashed=1;dashPattern=8 4;fontColor=#444444;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=6;',
+}
+
+# Map data-c4-type attribute values to C4_STYLES keys
+_C4_TYPE_MAP = {
+    'person': 'person',
+    'external person': 'external-person',
+    'software system': 'software-system',
+    'external system': 'external-system',
+    'container': 'container',
+    'container-db': 'container-db',
+    'external container': 'external-container',
+    'component': 'component',
+    'external component': 'external-component',
+    'boundary': 'boundary',
+}
+
+
+def _resolve_c4_style_key(c4_type_raw):
+    """Map a raw data-c4-type value to a C4_STYLES key, or None."""
+    if not c4_type_raw:
+        return None
+    normalized = c4_type_raw.strip().lower()
+    return _C4_TYPE_MAP.get(normalized)
+
+
+def build_c4_label(c4_name, c4_type_display, c4_technology, c4_description):
+    """Build a Draw.io C4 label using %placeholder% syntax."""
+    parts = []
+    parts.append('&lt;b&gt;%c4Name%&lt;/b&gt;')
+    if c4_type_display:
+        parts.append('&lt;i&gt;[%c4Type%]&lt;/i&gt;')
+    if c4_technology:
+        parts.append('&lt;i&gt;[%c4Technology%]&lt;/i&gt;')
+    if c4_description:
+        parts.append('&lt;br/&gt;%c4Description%')
+    return '&lt;br&gt;'.join(parts)
+
+
 def xml_attr_escape(s):
     """Escape a string for use in an XML attribute value (inside double quotes).
     This handles &, <, >, " but preserves already-escaped &lt; &gt; etc."""
@@ -359,24 +412,51 @@ def svg_to_drawio_cells(svg_el, page_id):
     for zi, z in enumerate(zone_rects):
         zid = cell_id
         cell_id += 1
-        label_parts = [html_escape(t['text']) for t in zone_labels.get(zi, [])]
-        label = '&lt;br&gt;'.join(label_parts) if label_parts else ''
-        color = parse_color(z['fill'], defs_map) or '#F5F5F5'
-        stroke_color = z['stroke'] or '#CCCCCC'
-        zone_font = '#64748b'
-        if zone_labels.get(zi):
-            zone_font = zone_labels[zi][0].get('fill', '#64748b')
-        style = (f'rounded=1;whiteSpace=wrap;html=1;fillColor={color};'
-                 f'strokeColor={stroke_color};opacity=50;'
-                 f'verticalAlign=top;fontStyle=1;fontSize=12;'
-                 f'fontColor={zone_font};arcSize=6;spacingTop=4;')
-        cells.append(
-            f'<mxCell id="{zid}" value="{xml_attr_escape(label)}" '
-            f'style="{style}" vertex="1" parent="1">'
-            f'<mxGeometry x="{z["x"]}" y="{z["y"]}" '
-            f'width="{z["w"]}" height="{z["h"]}" as="geometry"/>'
-            f'</mxCell>'
-        )
+
+        # Check for C4 boundary metadata
+        el = z.get('el')
+        c4_type_raw = el.get('data-c4-type', '') if el is not None else ''
+        c4_style_key = _resolve_c4_style_key(c4_type_raw)
+
+        if c4_style_key == 'boundary':
+            c4_name = el.get('data-c4-name', '') if el is not None else ''
+            c4_desc = el.get('data-c4-description', '') if el is not None else ''
+            c4_label = '&lt;b&gt;%c4Name%&lt;/b&gt;'
+            if c4_desc:
+                c4_label += '&lt;br&gt;%c4Description%'
+            style = C4_STYLES['boundary']
+            cells.append(
+                f'<object placeholders="1" '
+                f'c4Name="{xml_attr_escape(c4_name)}" '
+                f'c4Type="boundary" '
+                f'c4Description="{xml_attr_escape(c4_desc)}" '
+                f'label="{xml_attr_escape(c4_label)}" '
+                f'id="{zid}">'
+                f'<mxCell style="{style}" vertex="1" parent="1">'
+                f'<mxGeometry x="{z["x"]}" y="{z["y"]}" '
+                f'width="{z["w"]}" height="{z["h"]}" as="geometry"/>'
+                f'</mxCell>'
+                f'</object>'
+            )
+        else:
+            label_parts = [html_escape(t['text']) for t in zone_labels.get(zi, [])]
+            label = '&lt;br&gt;'.join(label_parts) if label_parts else ''
+            color = parse_color(z['fill'], defs_map) or '#F5F5F5'
+            stroke_color = z['stroke'] or '#CCCCCC'
+            zone_font = '#64748b'
+            if zone_labels.get(zi):
+                zone_font = zone_labels[zi][0].get('fill', '#64748b')
+            style = (f'rounded=1;whiteSpace=wrap;html=1;fillColor={color};'
+                     f'strokeColor={stroke_color};opacity=50;'
+                     f'verticalAlign=top;fontStyle=1;fontSize=12;'
+                     f'fontColor={zone_font};arcSize=6;spacingTop=4;')
+            cells.append(
+                f'<mxCell id="{zid}" value="{xml_attr_escape(label)}" '
+                f'style="{style}" vertex="1" parent="1">'
+                f'<mxGeometry x="{z["x"]}" y="{z["y"]}" '
+                f'width="{z["w"]}" height="{z["h"]}" as="geometry"/>'
+                f'</mxCell>'
+            )
 
     # Component rects
     for ri, r in enumerate(component_rects):
@@ -384,57 +464,88 @@ def svg_to_drawio_cells(svg_el, page_id):
         cell_id += 1
         rect_cell_ids[ri] = rid
 
-        # Group texts by y-coordinate: texts at similar y are horizontal siblings
-        # (e.g., table column headers) → join with " | " not "<br>"
-        texts_for_rect = rect_labels.get(ri, [])
-        if not texts_for_rect:
-            label = ''
+        # Check for C4 metadata on the raw SVG element
+        el = r.get('el')
+        c4_type_raw = el.get('data-c4-type', '') if el is not None else ''
+        c4_style_key = _resolve_c4_style_key(c4_type_raw)
+
+        if c4_style_key:
+            # ---- C4-native export: emit <object> wrapping <mxCell> ----
+            c4_name = el.get('data-c4-name', '') if el is not None else ''
+            c4_desc = el.get('data-c4-description', '') if el is not None else ''
+            c4_tech = el.get('data-c4-technology', '') if el is not None else ''
+            c4_type_display = c4_type_raw.strip()
+
+            c4_label = build_c4_label(c4_name, c4_type_display, c4_tech, c4_desc)
+            style = C4_STYLES[c4_style_key]
+
+            cells.append(
+                f'<object placeholders="1" '
+                f'c4Name="{xml_attr_escape(c4_name)}" '
+                f'c4Type="{xml_attr_escape(c4_type_display)}" '
+                f'c4Technology="{xml_attr_escape(c4_tech)}" '
+                f'c4Description="{xml_attr_escape(c4_desc)}" '
+                f'label="{xml_attr_escape(c4_label)}" '
+                f'id="{rid}">'
+                f'<mxCell style="{style}" vertex="1" parent="1">'
+                f'<mxGeometry x="{r["x"]}" y="{r["y"]}" '
+                f'width="{r["w"]}" height="{r["h"]}" as="geometry"/>'
+                f'</mxCell>'
+                f'</object>'
+            )
         else:
-            # Sort by y then x
-            sorted_texts = sorted(texts_for_rect, key=lambda t: (t['y'], t['x']))
-            lines = []  # list of lists, each inner list = texts on same y-row
-            for t in sorted_texts:
-                if lines and abs(t['y'] - lines[-1][0]['y']) < 5:
-                    lines[-1].append(t)
-                else:
-                    lines.append([t])
-            label_parts = []
-            for line_group in lines:
-                # Sort each line by x (left to right)
-                line_group.sort(key=lambda t: t['x'])
-                parts = []
-                for t in line_group:
-                    txt = html_escape(t['text'])
-                    if t['font_weight'] in ('600', '700', 'bold'):
-                        txt = f'&lt;b&gt;{txt}&lt;/b&gt;'
-                    parts.append(txt)
-                label_parts.append(' | '.join(parts) if len(parts) > 1 else parts[0])
-            label = '&lt;br&gt;'.join(label_parts)
+            # ---- Standard (non-C4) export ----
+            # Group texts by y-coordinate: texts at similar y are horizontal siblings
+            # (e.g., table column headers) → join with " | " not "<br>"
+            texts_for_rect = rect_labels.get(ri, [])
+            if not texts_for_rect:
+                label = ''
+            else:
+                # Sort by y then x
+                sorted_texts = sorted(texts_for_rect, key=lambda t: (t['y'], t['x']))
+                lines = []  # list of lists, each inner list = texts on same y-row
+                for t in sorted_texts:
+                    if lines and abs(t['y'] - lines[-1][0]['y']) < 5:
+                        lines[-1].append(t)
+                    else:
+                        lines.append([t])
+                label_parts = []
+                for line_group in lines:
+                    # Sort each line by x (left to right)
+                    line_group.sort(key=lambda t: t['x'])
+                    parts = []
+                    for t in line_group:
+                        txt = html_escape(t['text'])
+                        if t['font_weight'] in ('600', '700', 'bold'):
+                            txt = f'&lt;b&gt;{txt}&lt;/b&gt;'
+                        parts.append(txt)
+                    label_parts.append(' | '.join(parts) if len(parts) > 1 else parts[0])
+                label = '&lt;br&gt;'.join(label_parts)
 
-        fill = parse_color(r['fill'], defs_map) or '#FFFFFF'
-        stroke_color = r['stroke'] or 'none'
-        rounded = '1' if r['rx'] > 0 else '0'
+            fill = parse_color(r['fill'], defs_map) or '#FFFFFF'
+            stroke_color = r['stroke'] or 'none'
+            rounded = '1' if r['rx'] > 0 else '0'
 
-        # Smart font color: use luminance-based contrast
-        font_color = contrast_font_color(fill)
+            # Smart font color: use luminance-based contrast
+            font_color = contrast_font_color(fill)
 
-        # Determine font size: use the predominant label font size, scaled
-        label_fs = 10
-        if rect_labels.get(ri):
-            sizes = [scale_font_size(t.get('font_size', '10')) for t in rect_labels[ri]]
-            label_fs = max(sizes) if sizes else 10
+            # Determine font size: use the predominant label font size, scaled
+            label_fs = 10
+            if rect_labels.get(ri):
+                sizes = [scale_font_size(t.get('font_size', '10')) for t in rect_labels[ri]]
+                label_fs = max(sizes) if sizes else 10
 
-        style = (f'rounded={rounded};whiteSpace=wrap;html=1;fillColor={fill};'
-                 f'strokeColor={stroke_color};fontColor={font_color};'
-                 f'fontSize={label_fs};arcSize=10;spacing=4;')
+            style = (f'rounded={rounded};whiteSpace=wrap;html=1;fillColor={fill};'
+                     f'strokeColor={stroke_color};fontColor={font_color};'
+                     f'fontSize={label_fs};arcSize=10;spacing=4;')
 
-        cells.append(
-            f'<mxCell id="{rid}" value="{xml_attr_escape(label)}" '
-            f'style="{style}" vertex="1" parent="1">'
-            f'<mxGeometry x="{r["x"]}" y="{r["y"]}" '
-            f'width="{r["w"]}" height="{r["h"]}" as="geometry"/>'
-            f'</mxCell>'
-        )
+            cells.append(
+                f'<mxCell id="{rid}" value="{xml_attr_escape(label)}" '
+                f'style="{style}" vertex="1" parent="1">'
+                f'<mxGeometry x="{r["x"]}" y="{r["y"]}" '
+                f'width="{r["w"]}" height="{r["h"]}" as="geometry"/>'
+                f'</mxCell>'
+            )
 
     # ---- Filter out legend-internal lines ----
     # Legend rects are small white boxes containing short colored line segments
