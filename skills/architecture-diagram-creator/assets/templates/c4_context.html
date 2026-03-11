@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Context diagram for Internet Banking System</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 3rem;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1 {
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            margin: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+
+        /* ===== DIAGRAMS ===== */
+        .diagram-container {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ===== LEGEND ===== */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 12px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #2d3748;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <h1>Internet Banking System</h1>
+        <p class="subtitle">C4 Model - System Context Diagram</p>
+
+        <!-- DIAGRAM -->
+        <div class="section">
+            <h2 class="section-title">System Context diagram for Internet Banking System</h2>
+            <div class="diagram-container">
+                <svg viewBox="0 0 1200 800" width="1200" height="800"
+                     data-c4-level="context" data-c4-scope="Internet Banking System">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7"
+                                refX="10" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#666666"/>
+                        </marker>
+                    </defs>
+
+                    <!-- Person: Customer (top center) -->
+                    <rect x="475" y="40" width="250" height="140" rx="8"
+                          fill="#08427B" stroke="#052E56" stroke-width="2"
+                          data-c4-type="Person" data-c4-name="Personal Banking Customer"
+                          data-c4-description="A customer of the bank with personal accounts"/>
+                    <text x="600" y="90" text-anchor="middle" fill="white" font-size="13">
+                        <tspan x="600" dy="0" font-weight="bold" font-size="13">Personal Banking Customer</tspan>
+                        <tspan x="600" dy="18" font-size="11">[Person]</tspan>
+                        <tspan x="600" dy="16" font-size="10">A customer of the bank</tspan>
+                        <tspan x="600" dy="14" font-size="10">with personal accounts</tspan>
+                    </text>
+
+                    <!-- System: Internet Banking System (center) -->
+                    <rect x="425" y="320" width="350" height="160" rx="8"
+                          fill="#1168BD" stroke="#0B4884" stroke-width="2"
+                          data-c4-type="Software System" data-c4-name="Internet Banking System"
+                          data-c4-description="Allows customers to view account balances and make payments"/>
+                    <text x="600" y="375" text-anchor="middle" fill="white" font-size="13">
+                        <tspan x="600" dy="0" font-weight="bold" font-size="13">Internet Banking System</tspan>
+                        <tspan x="600" dy="18" font-size="11">[Software System]</tspan>
+                        <tspan x="600" dy="16" font-size="10">Allows customers to view</tspan>
+                        <tspan x="600" dy="14" font-size="10">balances and make payments</tspan>
+                    </text>
+
+                    <!-- External System: E-mail System (bottom left) -->
+                    <rect x="100" y="580" width="280" height="140" rx="8"
+                          fill="#999999" stroke="#6B6B6B" stroke-width="2"
+                          data-c4-type="External System" data-c4-name="E-mail System"
+                          data-c4-description="The internal Microsoft Exchange email system"/>
+                    <text x="240" y="630" text-anchor="middle" fill="white" font-size="13">
+                        <tspan x="240" dy="0" font-weight="bold" font-size="13">E-mail System</tspan>
+                        <tspan x="240" dy="18" font-size="11">[External System]</tspan>
+                        <tspan x="240" dy="16" font-size="10">The internal Microsoft</tspan>
+                        <tspan x="240" dy="14" font-size="10">Exchange email system</tspan>
+                    </text>
+
+                    <!-- External System: Mainframe Banking System (bottom right) -->
+                    <rect x="820" y="580" width="280" height="140" rx="8"
+                          fill="#999999" stroke="#6B6B6B" stroke-width="2"
+                          data-c4-type="External System" data-c4-name="Mainframe Banking System"
+                          data-c4-description="Stores core banking information about customers and accounts"/>
+                    <text x="960" y="630" text-anchor="middle" fill="white" font-size="13">
+                        <tspan x="960" dy="0" font-weight="bold" font-size="13">Mainframe Banking System</tspan>
+                        <tspan x="960" dy="18" font-size="11">[External System]</tspan>
+                        <tspan x="960" dy="16" font-size="10">Stores core banking info</tspan>
+                        <tspan x="960" dy="14" font-size="10">about customers and accounts</tspan>
+                    </text>
+
+                    <!-- Arrow: Customer -> Internet Banking System -->
+                    <path d="M 600,180 L 600,320" stroke="#666666" stroke-width="2"
+                          fill="none" marker-end="url(#arrowhead)" data-c4-label="Views account balances and makes payments using"/>
+                    <text x="610" y="255" text-anchor="start" fill="#666666" font-size="10">
+                        <tspan x="610" dy="0" font-size="10">Views account balances</tspan>
+                        <tspan x="610" dy="13" font-size="10">and makes payments using</tspan>
+                    </text>
+
+                    <!-- Arrow: Internet Banking System -> E-mail System -->
+                    <path d="M 425,400 L 240,580" stroke="#666666" stroke-width="2"
+                          fill="none" marker-end="url(#arrowhead)" data-c4-label="Sends e-mail using"/>
+                    <text x="270" y="490" text-anchor="start" fill="#666666" font-size="10">
+                        <tspan x="270" dy="0" font-size="10">Sends e-mail using</tspan>
+                    </text>
+
+                    <!-- Arrow: Internet Banking System -> Mainframe Banking System -->
+                    <path d="M 775,400 L 960,580" stroke="#666666" stroke-width="2"
+                          fill="none" marker-end="url(#arrowhead)" data-c4-label="Gets account information from"/>
+                    <text x="900" y="490" text-anchor="start" fill="#666666" font-size="10">
+                        <tspan x="900" dy="0" font-size="10">Gets account</tspan>
+                        <tspan x="900" dy="13" font-size="10">information from</tspan>
+                    </text>
+
+                    <!-- Arrow: E-mail System -> Customer -->
+                    <path d="M 190,580 L 490,180" stroke="#666666" stroke-width="2"
+                          fill="none" marker-end="url(#arrowhead)" data-c4-label="Sends e-mails to"/>
+                    <text x="280" y="360" text-anchor="start" fill="#666666" font-size="10">
+                        <tspan x="280" dy="0" font-size="10">Sends e-mails to</tspan>
+                    </text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- LEGEND -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: #08427B;"></div>
+                <span>Person</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #1168BD;"></div>
+                <span>Software System</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #999999;"></div>
+                <span>External System</span>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <strong>Internet Banking System - C4 Context v1.0</strong><br>
+            Generated: [DATE] | System Context Diagram<br>
+            C4 Model Level 1
+        </footer>
+    </div>
+</body>
+</html>
