@@ -73,7 +73,8 @@ Create comprehensive HTML architecture diagrams with data flows, business contex
 
 ## Workflow
 
-1. Analyze project (README, code structure)
+0. **If documentation is sparse or absent:** run the `technical-discovery` skill first. It will produce a structured markdown file you can use as input for the diagram.
+1. Analyze project (README, code structure, or discovery document from step 0)
 2. Extract: purpose, data sources, processing, tech stack, outputs
 3. Create HTML with all 6 sections
 4. Use semantic colors for visual hierarchy
