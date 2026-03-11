@@ -425,6 +425,8 @@ def svg_to_drawio_cells(svg_el, page_id):
             if c4_desc:
                 c4_label += '&lt;br&gt;%c4Description%'
             style = C4_STYLES['boundary']
+            inner_id = cell_id
+            cell_id += 1
             cells.append(
                 f'<object placeholders="1" '
                 f'c4Name="{xml_attr_escape(c4_name)}" '
@@ -432,7 +434,7 @@ def svg_to_drawio_cells(svg_el, page_id):
                 f'c4Description="{xml_attr_escape(c4_desc)}" '
                 f'label="{xml_attr_escape(c4_label)}" '
                 f'id="{zid}">'
-                f'<mxCell style="{style}" vertex="1" parent="1">'
+                f'<mxCell id="{inner_id}" style="{style}" vertex="1" parent="1">'
                 f'<mxGeometry x="{z["x"]}" y="{z["y"]}" '
                 f'width="{z["w"]}" height="{z["h"]}" as="geometry"/>'
                 f'</mxCell>'
@@ -479,6 +481,8 @@ def svg_to_drawio_cells(svg_el, page_id):
             c4_label = build_c4_label(c4_name, c4_type_display, c4_tech, c4_desc)
             style = C4_STYLES[c4_style_key]
 
+            inner_id = cell_id
+            cell_id += 1
             cells.append(
                 f'<object placeholders="1" '
                 f'c4Name="{xml_attr_escape(c4_name)}" '
@@ -487,7 +491,7 @@ def svg_to_drawio_cells(svg_el, page_id):
                 f'c4Description="{xml_attr_escape(c4_desc)}" '
                 f'label="{xml_attr_escape(c4_label)}" '
                 f'id="{rid}">'
-                f'<mxCell style="{style}" vertex="1" parent="1">'
+                f'<mxCell id="{inner_id}" style="{style}" vertex="1" parent="1">'
                 f'<mxGeometry x="{r["x"]}" y="{r["y"]}" '
                 f'width="{r["w"]}" height="{r["h"]}" as="geometry"/>'
                 f'</mxCell>'
