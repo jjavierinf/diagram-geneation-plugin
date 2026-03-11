@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Diagram</title>
+</head>
+<body>
+    <h2>My Diagram</h2>
+    <div class="diagram-container">
+        <svg viewBox="0 0 1200 800" width="1200" height="800"
+             data-c4-level="container" data-c4-scope="Test System">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7"
+                        refX="10" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="#666666"/>
+                </marker>
+            </defs>
+
+            <!-- Container WITHOUT technology (triggers c4_containers_have_technology) -->
+            <rect x="100" y="100" width="250" height="140" rx="8"
+                  fill="#438DD5" stroke="#2E6295" stroke-width="2"
+                  data-c4-type="container" data-c4-name="Web Application"
+                  data-c4-description="Delivers the web front-end"/>
+            <text x="225" y="155" text-anchor="middle" fill="white" font-size="13">
+                <tspan x="225" dy="0" font-weight="bold">Web Application</tspan>
+                <tspan x="225" dy="18" font-size="11">[Container]</tspan>
+                <tspan x="225" dy="16" font-size="10">Delivers the web front-end</tspan>
+            </text>
+
+            <!-- Software System WITHOUT description (triggers c4_elements_have_metadata) -->
+            <rect x="500" y="100" width="250" height="140" rx="8"
+                  fill="#1168BD" stroke="#0B4884" stroke-width="2"
+                  data-c4-type="software-system" data-c4-name="Banking System"/>
+            <text x="625" y="155" text-anchor="middle" fill="white" font-size="13">
+                <tspan x="625" dy="0" font-weight="bold">Banking System</tspan>
+                <tspan x="625" dy="18" font-size="11">[Software System]</tspan>
+            </text>
+
+            <!-- Component in a CONTAINER-level diagram (triggers c4_level_consistency) -->
+            <rect x="100" y="400" width="250" height="140" rx="8"
+                  fill="#85BBF0" stroke="#5D99C6" stroke-width="2"
+                  data-c4-type="component" data-c4-name="Security Component"
+                  data-c4-description="Handles authentication" data-c4-technology="Spring Bean"/>
+            <text x="225" y="455" text-anchor="middle" fill="white" font-size="13">
+                <tspan x="225" dy="0" font-weight="bold">Security Component</tspan>
+                <tspan x="225" dy="18" font-size="11">[Component]</tspan>
+                <tspan x="225" dy="16" font-size="10">Handles authentication</tspan>
+            </text>
+
+            <!-- External system with BLUE fill instead of gray (triggers c4_externals_distinct) -->
+            <rect x="500" y="400" width="250" height="140" rx="8"
+                  fill="#1168BD" stroke="#0B4884" stroke-width="2"
+                  data-c4-type="external-system" data-c4-name="Email System"
+                  data-c4-description="Sends emails"/>
+            <text x="625" y="455" text-anchor="middle" fill="white" font-size="13">
+                <tspan x="625" dy="0" font-weight="bold">Email System</tspan>
+                <tspan x="625" dy="18" font-size="11">[External System]</tspan>
+                <tspan x="625" dy="16" font-size="10">Sends emails</tspan>
+            </text>
+
+            <!-- Arrow with vague label "Uses" (triggers c4_relationships_labeled) -->
+            <path d="M 350,170 L 500,170" stroke="#666666" stroke-width="2"
+                  fill="none" marker-end="url(#arrowhead)"
+                  data-c4-label="Uses"/>
+            <text x="410" y="160" text-anchor="middle" fill="#666666" font-size="10">
+                <tspan x="410" dy="0">Uses</tspan>
+            </text>
+
+            <!-- Arrow with specific label (should pass) -->
+            <path d="M 225,240 L 225,400" stroke="#666666" stroke-width="2"
+                  fill="none" marker-end="url(#arrowhead)"
+                  data-c4-label="Authenticates users via"/>
+            <text x="235" y="320" text-anchor="start" fill="#666666" font-size="10">
+                <tspan x="235" dy="0">Authenticates users via</tspan>
+            </text>
+
+            <!-- No boundary rect present (triggers c4_has_boundary for container level) -->
+            <!-- No legend present in SVG (triggers c4_has_legend) -->
+        </svg>
+    </div>
+</body>
+</html>

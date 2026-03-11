@@ -3,7 +3,7 @@
 validate_svg.py - SVG diagram quality checks on HTML source files.
 
 Usage:
-    python3 validate_svg.py <html-file> [--json]
+    python3 validate_svg.py <html-file> [--json] [--c4] [--strict]
 
 Checks SVG elements for layout quality, text placement, arrow routing,
 and design consistency BEFORE conversion to any output format.
@@ -56,6 +56,10 @@ def parse_svg_elements(svg_str):
     lines = []
     paths = []
 
+    # Extract C4 attributes from SVG root
+    c4_level = svg_el.get('data-c4-level', '')
+    c4_scope = svg_el.get('data-c4-scope', '')
+
     for el in svg_el.iter():
         tag = el.tag.split('}')[-1] if '}' in el.tag else el.tag
 
@@ -65,9 +69,16 @@ def parse_svg_elements(svg_str):
             w = float(el.get('width', 0))
             h = float(el.get('height', 0))
             if w > 6 and h > 6:  # skip decorative accents
-                rects.append({'x': x, 'y': y, 'w': w, 'h': h,
-                              'fill': el.get('fill', ''),
-                              'stroke': el.get('stroke', '')})
+                rect_dict = {'x': x, 'y': y, 'w': w, 'h': h,
+                             'fill': el.get('fill', ''),
+                             'stroke': el.get('stroke', ''),
+                             'el': el}
+                # Extract all data-c4-* attributes
+                for attr_name, attr_val in el.attrib.items():
+                    if attr_name.startswith('data-c4-'):
+                        key = 'c4_' + attr_name[8:]  # data-c4-type -> c4_type
+                        rect_dict[key] = attr_val
+                rects.append(rect_dict)
 
         elif tag == 'text':
             x = float(el.get('x', 0))
@@ -115,12 +126,18 @@ def parse_svg_elements(svg_str):
                 pts = re.findall(r'([ML])\s*([-\d.]+)[,\s]+([-\d.]+)', d)
                 if len(pts) >= 2:
                     points = [(float(x), float(y)) for _, x, y in pts]
-                    paths.append({
+                    path_dict = {
                         'points': points,
                         'stroke': stroke,
                         'dashed': bool(el.get('stroke-dasharray')),
                         'marker': el.get('marker-end', ''),
-                    })
+                    }
+                    # Extract C4 attributes from paths
+                    for attr_name, attr_val in el.attrib.items():
+                        if attr_name.startswith('data-c4-'):
+                            key = 'c4_' + attr_name[8:]
+                            path_dict[key] = attr_val
+                    paths.append(path_dict)
 
     # Parse viewBox for SVG dimensions
     vb = svg_el.get('viewBox', '')
@@ -140,6 +157,7 @@ def parse_svg_elements(svg_str):
     return {
         'rects': rects, 'texts': texts, 'lines': lines, 'paths': paths,
         'width': svg_w, 'height': svg_h,
+        'c4_level': c4_level, 'c4_scope': c4_scope,
     }
 
 
@@ -729,6 +747,256 @@ def check_has_title(html_content, svg_index):
 
 
 # ---------------------------------------------------------------------------
+# C4 Semantic Checks
+# ---------------------------------------------------------------------------
+
+# Vague relationship labels that don't convey meaningful information
+_VAGUE_LABELS = {'uses', 'calls', 'sends', 'reads', 'writes', 'gets', 'sets',
+                 'connects', 'talks to', 'communicates with', 'depends on'}
+
+
+def check_c4_elements_have_metadata(elements, strict=False):
+    """Every element with data-c4-type must have name and description."""
+    issues = []
+    for r in elements['rects']:
+        c4_type = r.get('c4_type', '')
+        if not c4_type:
+            continue
+        c4_name = r.get('c4_name', '')
+        c4_desc = r.get('c4_description', '')
+        missing = []
+        if not c4_name:
+            missing.append('name')
+        if not c4_desc:
+            missing.append('description')
+        if missing:
+            issues.append({
+                'type': 'c4_elements_have_metadata',
+                'severity': 'fail' if strict else 'warn',
+                'c4_type': c4_type,
+                'c4_name': c4_name or '(unnamed)',
+                'missing': ', '.join(missing),
+            })
+    return issues
+
+
+def check_c4_containers_have_technology(elements, strict=False):
+    """Container and component elements need a technology annotation."""
+    issues = []
+    for r in elements['rects']:
+        c4_type = r.get('c4_type', '').lower()
+        if c4_type not in ('container', 'component'):
+            continue
+        if not r.get('c4_technology', ''):
+            issues.append({
+                'type': 'c4_containers_have_technology',
+                'severity': 'fail' if strict else 'warn',
+                'c4_type': c4_type,
+                'c4_name': r.get('c4_name', '(unnamed)'),
+                'message': f'{c4_type} missing technology annotation',
+            })
+    return issues
+
+
+def check_c4_relationships_labeled(elements, strict=False):
+    """Relationships must have non-empty, specific labels."""
+    issues = []
+    for p in elements['paths']:
+        label = p.get('c4_label', '')
+        if not label:
+            continue  # unlabeled arrows handled by label_completeness check
+        if label.strip().lower() in _VAGUE_LABELS:
+            issues.append({
+                'type': 'c4_relationships_labeled',
+                'severity': 'fail' if strict else 'warn',
+                'label': label,
+                'message': f'Vague relationship label "{label}" - be more specific',
+            })
+    for ln in elements['lines']:
+        label = ln.get('c4_label', '')
+        if label and label.strip().lower() in _VAGUE_LABELS:
+            issues.append({
+                'type': 'c4_relationships_labeled',
+                'severity': 'fail' if strict else 'warn',
+                'label': label,
+                'message': f'Vague relationship label "{label}" - be more specific',
+            })
+    return issues
+
+
+def check_c4_level_consistency(elements, strict=False):
+    """No cross-level element mixing (e.g., components in a context diagram)."""
+    issues = []
+    level = elements.get('c4_level', '').lower()
+    if not level:
+        return issues
+
+    # Define what types are allowed at each level
+    allowed = {
+        'context': {'person', 'software system', 'software-system', 'software_system',
+                     'external system', 'external-system', 'external_system',
+                     'enterprise boundary'},
+        'container': {'person', 'software system', 'software-system', 'software_system',
+                      'external system', 'external-system', 'external_system',
+                      'container', 'container-db', 'database', 'boundary'},
+        'component': {'person', 'software system', 'software-system', 'software_system',
+                      'external system', 'external-system', 'external_system',
+                      'container', 'container-db', 'component', 'database', 'boundary'},
+    }
+
+    level_allowed = allowed.get(level)
+    if not level_allowed:
+        return issues
+
+    for r in elements['rects']:
+        c4_type = r.get('c4_type', '').lower()
+        if not c4_type:
+            continue
+        if c4_type not in level_allowed:
+            issues.append({
+                'type': 'c4_level_consistency',
+                'severity': 'fail' if strict else 'warn',
+                'c4_level': level,
+                'c4_type': c4_type,
+                'c4_name': r.get('c4_name', '(unnamed)'),
+                'message': f'"{c4_type}" element not expected in {level}-level diagram',
+            })
+    return issues
+
+
+def check_c4_has_boundary(elements, strict=False):
+    """Container and component diagrams should have boundary rects."""
+    issues = []
+    level = elements.get('c4_level', '').lower()
+    if level not in ('container', 'component'):
+        return issues
+
+    # Look for boundary rects (large rects with dashed stroke or c4_type=boundary)
+    has_boundary = False
+    for r in elements['rects']:
+        c4_type = r.get('c4_type', '').lower()
+        if 'boundary' in c4_type:
+            has_boundary = True
+            break
+        # Heuristic: large rect with dashed stroke could be boundary
+        if r.get('stroke') and r['w'] > 400 and r['h'] > 300:
+            has_boundary = True
+            break
+
+    if not has_boundary:
+        issues.append({
+            'type': 'c4_has_boundary',
+            'severity': 'fail' if strict else 'warn',
+            'c4_level': level,
+            'message': f'{level}-level diagram should have a system boundary rect',
+        })
+    return issues
+
+
+def check_c4_title_format(elements, html_content, strict=False):
+    """Title should match C4 naming convention: '<Level> diagram for <Scope>'."""
+    issues = []
+    c4_level = elements.get('c4_level', '')
+    c4_scope = elements.get('c4_scope', '')
+    if not c4_level:
+        return issues
+
+    # Find h2 titles
+    h2s = re.findall(r'<h2[^>]*>(.*?)</h2>', html_content, re.DOTALL)
+    # Also check <title>
+    titles = re.findall(r'<title>(.*?)</title>', html_content, re.DOTALL)
+
+    all_titles = h2s + titles
+    # Expected pattern: "System Context diagram for X" or "Container diagram for X"
+    expected_patterns = [
+        rf'(?i){re.escape(c4_level)}.*diagram.*for',
+        rf'(?i).*diagram.*{re.escape(c4_level)}',
+    ]
+
+    has_c4_title = False
+    for title in all_titles:
+        title_clean = re.sub(r'<[^>]+>', '', title).strip()
+        for pat in expected_patterns:
+            if re.search(pat, title_clean):
+                has_c4_title = True
+                break
+        if has_c4_title:
+            break
+
+    if not has_c4_title:
+        issues.append({
+            'type': 'c4_title_format',
+            'severity': 'fail' if strict else 'warn',
+            'c4_level': c4_level,
+            'titles_found': [re.sub(r'<[^>]+>', '', t).strip() for t in all_titles[:3]],
+            'message': f'Title should follow C4 format: "{c4_level.title()} diagram for <scope>"',
+        })
+    return issues
+
+
+def check_c4_has_legend(elements, strict=False):
+    """C4 diagrams should include a legend/key."""
+    issues = []
+    if not elements.get('c4_level'):
+        return issues
+
+    # Look for legend-like text in the SVG
+    legend_keywords = {'legend', 'key', 'person', 'software system', 'external system',
+                       'container', 'component'}
+    legend_text_count = 0
+    for t in elements['texts']:
+        if t['text'].strip().lower() in legend_keywords:
+            legend_text_count += 1
+
+    # A legend typically has 3+ keyword matches clustered together
+    if legend_text_count < 3:
+        issues.append({
+            'type': 'c4_has_legend',
+            'severity': 'fail' if strict else 'warn',
+            'message': 'C4 diagram should include a legend/key explaining element types',
+        })
+    return issues
+
+
+def check_c4_externals_distinct(elements, strict=False):
+    """External elements should use gray fill, not blue (which denotes internal)."""
+    issues = []
+    # C4 convention: internal = blue (#1168BD), external = gray (#999999)
+    blue_fills = {'#1168bd', '#438dd5', '#08427b', '#085bbf'}
+
+    for r in elements['rects']:
+        c4_type = r.get('c4_type', '').lower().replace('_', '-')
+        if 'external' not in c4_type:
+            continue
+        fill = r.get('fill', '').lower()
+        if fill in blue_fills:
+            issues.append({
+                'type': 'c4_externals_distinct',
+                'severity': 'fail' if strict else 'warn',
+                'c4_name': r.get('c4_name', '(unnamed)'),
+                'fill': fill,
+                'message': 'External element uses blue fill - should be gray (#999999) to distinguish from internal',
+            })
+    return issues
+
+
+C4_CHECKS = [
+    ('c4_elements_have_metadata', check_c4_elements_have_metadata),
+    ('c4_containers_have_technology', check_c4_containers_have_technology),
+    ('c4_relationships_labeled', check_c4_relationships_labeled),
+    ('c4_level_consistency', check_c4_level_consistency),
+    ('c4_has_boundary', check_c4_has_boundary),
+    ('c4_has_legend', check_c4_has_legend),
+    ('c4_externals_distinct', check_c4_externals_distinct),
+]
+
+# C4 checks that need html_content (handled separately like check_has_title)
+C4_CHECKS_HTML = [
+    ('c4_title_format', check_c4_title_format),
+]
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -749,7 +1017,7 @@ ALL_CHECKS = [
 ]
 
 
-def validate_svg(html_path, json_output=False):
+def validate_svg(html_path, json_output=False, c4_mode=False, strict=False):
     """Run all SVG checks on each SVG in the HTML file."""
     with open(html_path, 'r', encoding='utf-8') as f:
         html_content = f.read()
@@ -781,6 +1049,14 @@ def validate_svg(html_path, json_output=False):
 
         # Title check needs html content
         svg_report['issues'].extend(check_has_title(html_content, i))
+
+        # C4 semantic checks (auto-detect or explicit --c4 flag)
+        is_c4 = c4_mode or bool(elements.get('c4_level'))
+        if is_c4:
+            for check_name, check_fn in C4_CHECKS:
+                svg_report['issues'].extend(check_fn(elements, strict=strict))
+            for check_name, check_fn in C4_CHECKS_HTML:
+                svg_report['issues'].extend(check_fn(elements, html_content, strict=strict))
 
         # Escalate to FAIL when warning count is high (visual review correlation:
         # diagrams with 10+ warnings consistently scored < 5/10)
@@ -852,8 +1128,10 @@ def main():
     parser = argparse.ArgumentParser(description='Validate SVG diagram quality in HTML files')
     parser.add_argument('html_file', help='Path to HTML file with SVG diagrams')
     parser.add_argument('--json', action='store_true', help='Output JSON instead of human-readable')
+    parser.add_argument('--c4', action='store_true', help='Enable C4 semantic validation checks')
+    parser.add_argument('--strict', action='store_true', help='Escalate C4 warnings to failures')
     args = parser.parse_args()
-    validate_svg(args.html_file, args.json)
+    validate_svg(args.html_file, args.json, c4_mode=args.c4, strict=args.strict)
 
 
 if __name__ == '__main__':
