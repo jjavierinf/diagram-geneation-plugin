@@ -80,3 +80,40 @@ Create comprehensive HTML architecture diagrams with data flows, business contex
 5. Write to `[project]-architecture.html`
 
 Keep diagrams clear, use consistent styling, include real project details.
+
+## C4 Model Diagrams
+
+### When to Use
+
+Activate C4 mode when the user mentions: "C4 diagram", "system context", "containers", "components", or requests a C4-style architecture view.
+
+### Workflow
+
+1. **Determine level** - System Context (L1), Container (L2), Component (L3), or Code (L4)
+2. **Pick template** - Use the matching C4 template from `references/c4_reference.md`
+3. **Fill data attributes** - Set `data-c4-level`, `data-c4-type`, `data-c4-technology`, `data-c4-description` on each element
+4. **Validate** - Export with `--c4` flag to run C4-specific semantic checks
+5. **Export** - Generate HTML; optionally export to DrawIO/PPTX
+
+### C4 Color Scheme
+
+| Element | Color | Hex |
+|---------|-------|-----|
+| Person | Dark blue | `#08427B` |
+| Software System | Blue | `#1168BD` |
+| Container | Medium blue | `#438DD5` |
+| Component | Light blue | `#85BBF0` |
+| External Person/System | Gray | `#999999` |
+
+All elements use white (`#FFFFFF`) text.
+
+### C4 Element Text Pattern
+
+Each element label follows this structure:
+- **Name** (bold, larger)
+- `[Type: Technology]` (bracketed, normal weight)
+- *Description* (smaller font, 1-2 lines)
+
+### Reference
+
+See `references/c4_reference.md` for full C4 notation rules, level definitions, and example markup.

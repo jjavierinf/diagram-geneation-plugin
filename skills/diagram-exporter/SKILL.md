@@ -134,6 +134,25 @@ python3 ~/repos/claude-skills/skills/diagram-exporter/scripts/validate_render.py
 
 Dispatch a subagent with the prompt template in `scripts/visual_review_prompt.md` plus the rendered PNG. Target score: 7+/10.
 
+### C4 Semantic Validation
+
+When exporting C4 diagrams, additional semantic checks are available.
+
+- **`--c4` flag** - Enables C4-specific validation. Auto-detected when `data-c4-level` attributes are present on SVG elements.
+- **`--strict` flag** - Enforces full C4 compliance (all 8 checks must pass, warnings become errors).
+
+**C4-specific checks (8):**
+1. Every element has a valid `data-c4-type` (Person, System, Container, Component, External)
+2. `data-c4-level` is consistent across the diagram (no mixed levels)
+3. All elements have `data-c4-description` set
+4. Color matches the C4 type (e.g., Person = `#08427B`)
+5. Element labels follow the Name / [Type: Tech] / Description pattern
+6. Relationships have verb-phrase labels (not empty arrows)
+7. External elements use gray (`#999999`) fill
+8. No orphan elements (every node has at least one relationship)
+
+**DrawIO C4 export:** When `data-c4-*` attributes are detected, `svg2drawio.py` auto-generates native C4 `<object>` elements with `c4Type`, `c4Technology`, and `c4Description` properties, making the output compatible with Draw.io's built-in C4 shape library.
+
 ### Full Pipeline Example (DrawIO)
 
 ```bash
