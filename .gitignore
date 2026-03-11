@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+*.pyc
+.env
+
+# Calibration artifacts (generated, not source)
+skills/diagram-exporter/calibration/diagrams/
+skills/diagram-exporter/calibration/calibration-log.jsonl
+skills/diagram-exporter/calibration/state.json

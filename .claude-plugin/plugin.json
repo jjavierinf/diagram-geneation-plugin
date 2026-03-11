@@ -1,0 +1,8 @@
+{
+  "name": "diagram-tools",
+  "version": "1.0.0",
+  "description": "Architecture diagram generation and export toolkit. Create comprehensive HTML/SVG architecture diagrams and export them to PowerPoint (PPTX) or editable Draw.io files.",
+  "author": {
+    "name": "jjavierinf"
+  }
+}

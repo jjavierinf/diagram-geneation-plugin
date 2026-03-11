@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test 01 - Simple 3-Box Flow</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero h1 { font-size: 2rem; color: #1a1a2e; margin: 0; }
+    h2 { color: #2c3e50; margin-top: 30px; }
+    .diagram-wrap { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; display: inline-block; }
+    svg text { font-family: 'Segoe UI', Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="hero"><h1>Simple 3-Box Flow</h1></div>
+
+  <h2>Data Pipeline Overview</h2>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 750 200" width="750" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+        </marker>
+      </defs>
+
+      <!-- Box 1: Data Source -->
+      <rect x="50" y="70" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="2" />
+      <text x="125" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Data Source</text>
+
+      <!-- Arrow 1 -->
+      <line x1="200" y1="100" x2="290" y2="100" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Box 2: ETL Process -->
+      <rect x="300" y="70" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="2" />
+      <text x="375" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">ETL Process</text>
+
+      <!-- Arrow 2 -->
+      <line x1="450" y1="100" x2="540" y2="100" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Box 3: Data Warehouse -->
+      <rect x="550" y="70" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="2" />
+      <text x="625" y="105" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Data Warehouse</text>
+    </svg>
+  </div>
+</body>
+</html>

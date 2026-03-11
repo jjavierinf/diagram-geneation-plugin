@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test 05 - Vertical Pipeline</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero h1 { font-size: 2rem; color: #1a1a2e; margin: 0; }
+    h2 { color: #2c3e50; margin-top: 30px; }
+    .diagram-wrap { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; display: inline-block; }
+    svg text { font-family: 'Segoe UI', Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="hero"><h1>Vertical Pipeline</h1></div>
+
+  <h2>Data Processing Stages</h2>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 500 750" width="500" height="750" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+        </marker>
+      </defs>
+
+      <!-- Stage 1: Extract (blue) -->
+      <rect x="150" y="30" width="200" height="50" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="2" />
+      <text x="250" y="60" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Extract</text>
+      <text x="250" y="100" text-anchor="middle" font-size="11" fill="#777">Pull data from source systems</text>
+
+      <!-- Arrow 1->2 -->
+      <line x1="250" y1="80" x2="250" y2="158" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Stage 2: Validate (yellow) -->
+      <rect x="150" y="170" width="200" height="50" rx="6" ry="6" fill="#fef9e7" stroke="#f1c40f" stroke-width="2" />
+      <text x="250" y="200" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Validate</text>
+      <text x="250" y="240" text-anchor="middle" font-size="11" fill="#777">Check schema and data quality</text>
+
+      <!-- Arrow 2->3 -->
+      <line x1="250" y1="220" x2="250" y2="298" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Stage 3: Transform (purple) -->
+      <rect x="150" y="310" width="200" height="50" rx="6" ry="6" fill="#f4ecf7" stroke="#8e44ad" stroke-width="2" />
+      <text x="250" y="340" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Transform</text>
+      <text x="250" y="380" text-anchor="middle" font-size="11" fill="#777">Apply business rules and mappings</text>
+
+      <!-- Arrow 3->4 -->
+      <line x1="250" y1="360" x2="250" y2="438" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Stage 4: Load (green) -->
+      <rect x="150" y="450" width="200" height="50" rx="6" ry="6" fill="#d5f5e3" stroke="#27ae60" stroke-width="2" />
+      <text x="250" y="480" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Load</text>
+      <text x="250" y="520" text-anchor="middle" font-size="11" fill="#777">Write to target data warehouse</text>
+
+      <!-- Arrow 4->5 -->
+      <line x1="250" y1="500" x2="250" y2="578" stroke="#34495e" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Stage 5: Verify (orange) -->
+      <rect x="150" y="590" width="200" height="50" rx="6" ry="6" fill="#fdebd0" stroke="#e67e22" stroke-width="2" />
+      <text x="250" y="620" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a2e">Verify</text>
+      <text x="250" y="660" text-anchor="middle" font-size="11" fill="#777">Run reconciliation checks</text>
+    </svg>
+  </div>
+</body>
+</html>

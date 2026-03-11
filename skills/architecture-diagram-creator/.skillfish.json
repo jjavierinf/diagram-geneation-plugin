@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "architecture-diagram-creator",
+  "owner": "mhattingpete",
+  "repo": "claude-skills-marketplace",
+  "path": "visual-documentation-plugin/skills/architecture-diagram-creator",
+  "branch": "main",
+  "sha": "dec13a7350932b5f50ecf50e759800afcb873677",
+  "source": "manual"
+}

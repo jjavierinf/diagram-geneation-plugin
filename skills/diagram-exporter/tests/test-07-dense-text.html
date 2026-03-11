@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test 07 - Dense Text</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f6fa; color: #2d3436; }
+  .hero { background: linear-gradient(135deg, #00b894, #00cec9); padding: 48px 32px; text-align: center; }
+  .hero h1 { color: #fff; font-size: 2rem; font-weight: 600; }
+  .content { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+  h2 { font-size: 1.4rem; margin-bottom: 16px; color: #2d3436; }
+  .diagram-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 32px; overflow-x: auto; }
+  .diagram-wrap svg { display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="hero"><h1>Dense Text Labels</h1></div>
+<div class="content">
+  <h2>Multi-line and Long Labels in SVG Boxes</h2>
+  <div class="diagram-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600" width="1100" height="600">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2d3436" />
+        </marker>
+      </defs>
+
+      <!-- Box 1: User Authentication Service -->
+      <rect x="40" y="40" width="320" height="120" rx="10" fill="#dfe6e9" stroke="#636e72" stroke-width="2" />
+      <text x="200" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#2d3436">
+        <tspan x="200" dy="0">User Authentication Service</tspan>
+      </text>
+      <text x="200" y="100" text-anchor="middle" font-size="13" fill="#636e72">
+        <tspan x="200" dy="0">Handles OAuth2, SAML, JWT tokens</tspan>
+        <tspan x="200" dy="20">Rate limited to 1000 req/sec</tspan>
+      </text>
+
+      <!-- Box 2: Data Processing Engine -->
+      <rect x="40" y="220" width="320" height="120" rx="10" fill="#ffeaa7" stroke="#fdcb6e" stroke-width="2" />
+      <text x="200" y="252" text-anchor="middle" font-size="16" font-weight="700" fill="#2d3436">
+        <tspan x="200" dy="0">Data Processing Engine</tspan>
+      </text>
+      <text x="200" y="280" text-anchor="middle" font-size="13" fill="#636e72">
+        <tspan x="200" dy="0">Apache Spark cluster with 12 workers</tspan>
+        <tspan x="200" dy="20">Processes 50TB daily</tspan>
+      </text>
+
+      <!-- Box 3: Monitoring Dashboard -->
+      <rect x="440" y="40" width="320" height="120" rx="10" fill="#81ecec" stroke="#00cec9" stroke-width="2" />
+      <text x="600" y="72" text-anchor="middle" font-size="16" font-weight="700" fill="#2d3436">
+        <tspan x="600" dy="0">Monitoring Dashboard</tspan>
+      </text>
+      <text x="600" y="100" text-anchor="middle" font-size="13" fill="#636e72">
+        <tspan x="600" dy="0">Grafana + Prometheus stack</tspan>
+        <tspan x="600" dy="20">Alerts via PagerDuty integration</tspan>
+      </text>
+
+      <!-- Box 4: Long single-line label -->
+      <rect x="100" y="420" width="900" height="90" rx="10" fill="#fab1a0" stroke="#e17055" stroke-width="2" />
+      <text x="550" y="460" text-anchor="middle" font-size="15" font-weight="700" fill="#2d3436">
+        <tspan x="550" dy="0">Real-time Event Stream Processing Pipeline</tspan>
+        <tspan x="550" dy="22">with Exactly-Once Delivery Guarantees</tspan>
+      </text>
+
+      <!-- Connecting arrows -->
+      <!-- Box 1 -> Box 3 -->
+      <line x1="360" y1="100" x2="430" y2="100" stroke="#2d3436" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Box 1 -> Box 2 -->
+      <line x1="200" y1="160" x2="200" y2="210" stroke="#2d3436" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Box 2 -> Box 4 -->
+      <line x1="200" y1="340" x2="350" y2="410" stroke="#2d3436" stroke-width="2" marker-end="url(#arrowhead)" />
+
+      <!-- Box 3 -> Box 4 -->
+      <line x1="600" y1="160" x2="600" y2="410" stroke="#2d3436" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowhead)" />
+    </svg>
+  </div>
+</div>
+</body>
+</html>

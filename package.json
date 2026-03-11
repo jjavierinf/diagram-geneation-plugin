@@ -1,0 +1,10 @@
+{
+  "name": "diagram-tools",
+  "version": "1.0.0",
+  "description": "Node dependencies for diagram-tools plugin",
+  "private": true,
+  "dependencies": {
+    "puppeteer": "^22.0.0",
+    "draw.io-export": "^0.3.0"
+  }
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test 04 - Star Topology</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero h1 { font-size: 2rem; color: #1a1a2e; margin: 0; }
+    h2 { color: #2c3e50; margin-top: 30px; }
+    .diagram-wrap { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; display: inline-block; }
+    svg text { font-family: 'Segoe UI', Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="hero"><h1>Star Topology</h1></div>
+
+  <h2>Message Bus Architecture</h2>
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 900 700" width="900" height="700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#34495e" />
+        </marker>
+        <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2980b9" />
+        </marker>
+        <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60" />
+        </marker>
+      </defs>
+
+      <!-- Central: Message Bus -->
+      <rect x="350" y="310" width="200" height="80" rx="8" ry="8" fill="#f9e79f" stroke="#f39c12" stroke-width="2.5" />
+      <text x="450" y="345" text-anchor="middle" font-size="15" font-weight="bold" fill="#1a1a2e">Message Bus</text>
+      <text x="450" y="365" text-anchor="middle" font-size="11" fill="#666">Event Broker</text>
+
+      <!-- Service 1: Auth Service (top-left) -->
+      <rect x="80" y="80" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="1.5" />
+      <text x="155" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Auth Service</text>
+
+      <!-- Service 2: User Service (top-center) -->
+      <rect x="375" y="60" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="1.5" />
+      <text x="450" y="95" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">User Service</text>
+
+      <!-- Service 3: Payment Service (top-right) -->
+      <rect x="670" y="80" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="1.5" />
+      <text x="745" y="115" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Payment Service</text>
+
+      <!-- Service 4: Notification Service (bottom-left) -->
+      <rect x="80" y="560" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="1.5" />
+      <text x="155" y="588" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a2e">Notification Svc</text>
+
+      <!-- Service 5: Analytics Service (bottom-center) -->
+      <rect x="375" y="580" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="1.5" />
+      <text x="450" y="615" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Analytics Service</text>
+
+      <!-- Service 6: Search Service (bottom-right) -->
+      <rect x="670" y="560" width="150" height="60" rx="6" ry="6" fill="#d6eaf8" stroke="#2980b9" stroke-width="1.5" />
+      <text x="745" y="595" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a1a2e">Search Service</text>
+
+      <!-- Arrows TO message bus (blue) -->
+      <!-- Auth -> Bus -->
+      <line x1="230" y1="130" x2="355" y2="320" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- User -> Bus -->
+      <line x1="440" y1="120" x2="440" y2="308" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- Payment -> Bus -->
+      <line x1="670" y1="130" x2="545" y2="320" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- Notification -> Bus -->
+      <line x1="230" y1="570" x2="355" y2="380" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- Analytics -> Bus -->
+      <line x1="440" y1="580" x2="440" y2="392" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- Search -> Bus -->
+      <line x1="670" y1="570" x2="545" y2="380" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+
+      <!-- Arrows FROM message bus (green) -->
+      <!-- Bus -> Auth -->
+      <line x1="365" y1="315" x2="210" y2="140" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+      <!-- Bus -> User -->
+      <line x1="460" y1="310" x2="460" y2="122" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+      <!-- Bus -> Payment -->
+      <line x1="535" y1="315" x2="690" y2="140" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+      <!-- Bus -> Notification -->
+      <line x1="365" y1="385" x2="210" y2="560" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+      <!-- Bus -> Analytics -->
+      <line x1="460" y1="390" x2="460" y2="578" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+      <!-- Bus -> Search -->
+      <line x1="535" y1="385" x2="690" y2="560" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+
+      <!-- Legend -->
+      <line x1="30" y1="670" x2="70" y2="670" stroke="#2980b9" stroke-width="2" marker-end="url(#arrowhead-blue)" />
+      <text x="80" y="674" font-size="11" fill="#555">Publish</text>
+      <line x1="140" y1="670" x2="180" y2="670" stroke="#27ae60" stroke-width="2" marker-end="url(#arrowhead-green)" />
+      <text x="190" y="674" font-size="11" fill="#555">Subscribe</text>
+    </svg>
+  </div>
+</body>
+</html>

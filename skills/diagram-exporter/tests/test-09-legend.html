@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test 09 - Legend and Annotations</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f6fa; color: #2d3436; }
+  .hero { background: linear-gradient(135deg, #6c5ce7, #a29bfe); padding: 48px 32px; text-align: center; }
+  .hero h1 { color: #fff; font-size: 2rem; font-weight: 600; }
+  .content { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+  h2 { font-size: 1.4rem; margin-bottom: 16px; color: #2d3436; }
+  .diagram-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 32px; overflow-x: auto; }
+  .diagram-wrap svg { display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="hero"><h1>Legend and Annotations</h1></div>
+<div class="content">
+  <h2>Architecture with Legend and Floating Annotations</h2>
+  <div class="diagram-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 600" width="1100" height="600">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2d3436" />
+        </marker>
+        <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#0984e3" />
+        </marker>
+        <marker id="arrowhead-orange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#e17055" />
+        </marker>
+      </defs>
+
+      <!-- Box 1: API Gateway (blue = processing) -->
+      <rect x="100" y="80" width="200" height="80" rx="10" fill="#74b9ff" stroke="#0984e3" stroke-width="2" />
+      <text x="200" y="125" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">API Gateway</text>
+
+      <!-- Box 2: Processing Engine (blue = processing) -->
+      <rect x="450" y="80" width="200" height="80" rx="10" fill="#74b9ff" stroke="#0984e3" stroke-width="2" />
+      <text x="550" y="125" text-anchor="middle" font-size="16" font-weight="600" fill="#fff">Processing Engine</text>
+
+      <!-- Box 3: Data Lake (green = storage) -->
+      <rect x="800" y="80" width="200" height="80" rx="10" fill="#55efc4" stroke="#00b894" stroke-width="2" />
+      <text x="900" y="125" text-anchor="middle" font-size="16" font-weight="600" fill="#2d3436">Data Lake</text>
+
+      <!-- Box 4: Archive Store (green = storage) -->
+      <rect x="800" y="260" width="200" height="80" rx="10" fill="#55efc4" stroke="#00b894" stroke-width="2" />
+      <text x="900" y="305" text-anchor="middle" font-size="16" font-weight="600" fill="#2d3436">Archive Store</text>
+
+      <!-- Data flow arrows (solid) -->
+      <line x1="300" y1="120" x2="440" y2="120" stroke="#0984e3" stroke-width="2" marker-end="url(#arrowhead-blue)" />
+      <text x="370" y="112" text-anchor="middle" font-size="11" fill="#636e72">requests</text>
+
+      <line x1="650" y1="120" x2="790" y2="120" stroke="#0984e3" stroke-width="2" marker-end="url(#arrowhead-blue)" />
+      <text x="720" y="112" text-anchor="middle" font-size="11" fill="#636e72">store</text>
+
+      <line x1="900" y1="160" x2="900" y2="250" stroke="#0984e3" stroke-width="2" marker-end="url(#arrowhead-blue)" />
+      <text x="920" y="210" font-size="11" fill="#636e72">archive</text>
+
+      <!-- Monitoring arrows (dashed orange) -->
+      <line x1="200" y1="160" x2="200" y2="260" stroke="#e17055" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowhead-orange)" />
+      <line x1="550" y1="160" x2="550" y2="260" stroke="#e17055" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowhead-orange)" />
+
+      <!-- Invisible monitoring target zone (just endpoints for the dashed lines) -->
+      <text x="200" y="280" text-anchor="middle" font-size="11" font-style="italic" fill="#e17055">metrics out</text>
+      <text x="550" y="280" text-anchor="middle" font-size="11" font-style="italic" fill="#e17055">metrics out</text>
+
+      <!-- Floating annotations -->
+      <text x="80" y="50" font-size="12" font-style="italic" fill="#636e72">Entry point for all client traffic</text>
+      <line x1="200" y1="55" x2="200" y2="72" stroke="#b2bec3" stroke-width="1" stroke-dasharray="3,2" />
+
+      <text x="680" y="40" font-size="12" font-style="italic" fill="#636e72">High-throughput zone (>10k TPS)</text>
+      <line x1="770" y1="44" x2="810" y2="72" stroke="#b2bec3" stroke-width="1" stroke-dasharray="3,2" />
+
+      <text x="750" y="370" font-size="12" font-style="italic" fill="#636e72">Cold storage, 90-day retention</text>
+      <line x1="870" y1="355" x2="880" y2="342" stroke="#b2bec3" stroke-width="1" stroke-dasharray="3,2" />
+
+      <!-- ===== LEGEND (bottom-left) ===== -->
+      <rect x="30" y="430" width="310" height="150" rx="10" fill="#f8f9fa" stroke="#b2bec3" stroke-width="1.5" />
+      <text x="185" y="458" text-anchor="middle" font-size="14" font-weight="700" fill="#2d3436">Legend</text>
+
+      <!-- Solid line = data flow -->
+      <line x1="50" y1="485" x2="110" y2="485" stroke="#0984e3" stroke-width="2" />
+      <text x="120" y="489" font-size="13" fill="#2d3436">Solid line = Data flow</text>
+
+      <!-- Dashed line = monitoring -->
+      <line x1="50" y1="515" x2="110" y2="515" stroke="#e17055" stroke-width="2" stroke-dasharray="8,4" />
+      <text x="120" y="519" font-size="13" fill="#2d3436">Dashed line = Monitoring</text>
+
+      <!-- Blue = processing -->
+      <rect x="50" y="535" width="60" height="16" rx="4" fill="#74b9ff" stroke="#0984e3" stroke-width="1" />
+      <text x="120" y="549" font-size="13" fill="#2d3436">Blue = Processing</text>
+
+      <!-- Green = storage -->
+      <rect x="50" y="560" width="60" height="16" rx="4" fill="#55efc4" stroke="#00b894" stroke-width="1" />
+      <text x="120" y="574" font-size="13" fill="#2d3436">Green = Storage</text>
+    </svg>
+  </div>
+</div>
+</body>
+</html>

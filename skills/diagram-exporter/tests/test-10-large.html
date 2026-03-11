@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test 10 - Large Complex Diagram</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f6fa; color: #2d3436; }
+  .hero { background: linear-gradient(135deg, #2d3436, #636e72); padding: 48px 32px; text-align: center; }
+  .hero h1 { color: #fff; font-size: 2rem; font-weight: 600; }
+  .content { max-width: 1400px; margin: 0 auto; padding: 40px 24px; }
+  h2 { font-size: 1.4rem; margin-bottom: 16px; color: #2d3436; }
+  .diagram-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); padding: 24px; margin-bottom: 32px; overflow-x: auto; }
+  .diagram-wrap svg { display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="hero"><h1>Large Complex Architecture</h1></div>
+<div class="content">
+  <h2>Full Platform Architecture - 4 Zones, 20+ Components</h2>
+  <div class="diagram-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 950" width="1300" height="950">
+      <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#2d3436" />
+        </marker>
+        <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#0984e3" />
+        </marker>
+        <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#00b894" />
+        </marker>
+        <marker id="arrowhead-orange" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#e17055" />
+        </marker>
+        <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill="#6c5ce7" />
+        </marker>
+      </defs>
+
+      <!-- =============================== -->
+      <!-- ZONE 1: INGESTION (top-left)    -->
+      <!-- =============================== -->
+      <rect x="20" y="20" width="600" height="210" rx="12" fill="none" stroke="#0984e3" stroke-width="2" stroke-dasharray="6,3" />
+      <text x="40" y="45" font-size="15" font-weight="700" fill="#0984e3">INGESTION ZONE</text>
+
+      <!-- Kafka Broker -->
+      <rect x="40" y="60" width="140" height="55" rx="8" fill="#74b9ff" stroke="#0984e3" stroke-width="1.5" />
+      <text x="110" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Kafka Broker</text>
+
+      <!-- REST Endpoint -->
+      <rect x="200" y="60" width="140" height="55" rx="8" fill="#74b9ff" stroke="#0984e3" stroke-width="1.5" />
+      <text x="270" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">REST Endpoint</text>
+
+      <!-- File Watcher -->
+      <rect x="360" y="60" width="140" height="55" rx="8" fill="#74b9ff" stroke="#0984e3" stroke-width="1.5" />
+      <text x="430" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">File Watcher</text>
+
+      <!-- CDC Connector -->
+      <rect x="40" y="150" width="140" height="55" rx="8" fill="#74b9ff" stroke="#0984e3" stroke-width="1.5" />
+      <text x="110" y="182" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">CDC Connector</text>
+
+      <!-- Schema Registry -->
+      <rect x="200" y="150" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="270" y="182" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Schema Registry</text>
+
+      <!-- Rate Limiter -->
+      <rect x="360" y="150" width="140" height="55" rx="8" fill="#74b9ff" stroke="#0984e3" stroke-width="1.5" />
+      <text x="430" y="182" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Rate Limiter</text>
+
+      <!-- =============================== -->
+      <!-- ZONE 2: PROCESSING (top-right)  -->
+      <!-- =============================== -->
+      <rect x="660" y="20" width="620" height="210" rx="12" fill="none" stroke="#e17055" stroke-width="2" stroke-dasharray="6,3" />
+      <text x="680" y="45" font-size="15" font-weight="700" fill="#e17055">PROCESSING ZONE</text>
+
+      <!-- Spark Engine -->
+      <rect x="680" y="60" width="140" height="55" rx="8" fill="#fab1a0" stroke="#e17055" stroke-width="1.5" />
+      <text x="750" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Spark Engine</text>
+
+      <!-- Flink Streaming -->
+      <rect x="840" y="60" width="140" height="55" rx="8" fill="#fab1a0" stroke="#e17055" stroke-width="1.5" />
+      <text x="910" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Flink Streaming</text>
+
+      <!-- ML Pipeline -->
+      <rect x="1000" y="60" width="140" height="55" rx="8" fill="#fab1a0" stroke="#e17055" stroke-width="1.5" />
+      <text x="1070" y="92" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">ML Pipeline</text>
+
+      <!-- Validator -->
+      <rect x="680" y="150" width="140" height="55" rx="8" fill="#fab1a0" stroke="#e17055" stroke-width="1.5" />
+      <text x="750" y="182" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Validator</text>
+
+      <!-- Enrichment -->
+      <rect x="840" y="150" width="140" height="55" rx="8" fill="#fab1a0" stroke="#e17055" stroke-width="1.5" />
+      <text x="910" y="182" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Enrichment</text>
+
+      <!-- Aggregator -->
+      <rect x="1000" y="150" width="140" height="55" rx="8" fill="#fab1a0" stroke="#e17055" stroke-width="1.5" />
+      <text x="1070" y="182" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Aggregator</text>
+
+      <!-- =============================== -->
+      <!-- ZONE 3: STORAGE (bottom-left)   -->
+      <!-- =============================== -->
+      <rect x="20" y="280" width="600" height="280" rx="12" fill="none" stroke="#00b894" stroke-width="2" stroke-dasharray="6,3" />
+      <text x="40" y="305" font-size="15" font-weight="700" fill="#00b894">STORAGE ZONE</text>
+
+      <!-- PostgreSQL -->
+      <rect x="40" y="320" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="110" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">PostgreSQL</text>
+
+      <!-- Redis -->
+      <rect x="200" y="320" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="270" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Redis</text>
+
+      <!-- S3 Data Lake -->
+      <rect x="360" y="320" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="430" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">S3 Data Lake</text>
+
+      <!-- Elasticsearch -->
+      <rect x="40" y="410" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="110" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Elasticsearch</text>
+
+      <!-- ClickHouse -->
+      <rect x="200" y="410" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="270" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">ClickHouse</text>
+
+      <!-- MinIO Archive -->
+      <rect x="360" y="410" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="430" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">MinIO Archive</text>
+
+      <!-- Iceberg Catalog -->
+      <rect x="200" y="495" width="140" height="55" rx="8" fill="#55efc4" stroke="#00b894" stroke-width="1.5" />
+      <text x="270" y="527" text-anchor="middle" font-size="13" font-weight="600" fill="#2d3436">Iceberg Catalog</text>
+
+      <!-- =============================== -->
+      <!-- ZONE 4: SERVING (bottom-right)  -->
+      <!-- =============================== -->
+      <rect x="660" y="280" width="620" height="280" rx="12" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-dasharray="6,3" />
+      <text x="680" y="305" font-size="15" font-weight="700" fill="#6c5ce7">SERVING ZONE</text>
+
+      <!-- GraphQL API -->
+      <rect x="680" y="320" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="750" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">GraphQL API</text>
+
+      <!-- REST API -->
+      <rect x="840" y="320" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="910" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">REST API</text>
+
+      <!-- gRPC Service -->
+      <rect x="1000" y="320" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="1070" y="352" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">gRPC Service</text>
+
+      <!-- Dashboard UI -->
+      <rect x="680" y="410" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="750" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Dashboard UI</text>
+
+      <!-- Notification Svc -->
+      <rect x="840" y="410" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="910" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Notification Svc</text>
+
+      <!-- Report Generator -->
+      <rect x="1000" y="410" width="140" height="55" rx="8" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1.5" />
+      <text x="1070" y="442" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Report Generator</text>
+
+      <!-- =============================================== -->
+      <!-- ARROWS: Ingestion -> Processing (solid blue)    -->
+      <!-- =============================================== -->
+      <!-- Kafka -> Spark -->
+      <line x1="180" y1="87" x2="670" y2="87" stroke="#0984e3" stroke-width="2" marker-end="url(#arrowhead-blue)" />
+      <!-- REST Endpoint -> Flink -->
+      <line x1="340" y1="87" x2="830" y2="87" stroke="#0984e3" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- File Watcher -> Spark (curved) -->
+      <path d="M 500 87 L 590 87 L 590 140 L 680 140" stroke="#0984e3" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-blue)" />
+      <!-- CDC -> Validator -->
+      <line x1="180" y1="177" x2="670" y2="177" stroke="#0984e3" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+      <!-- Rate Limiter -> Enrichment -->
+      <line x1="500" y1="177" x2="830" y2="177" stroke="#0984e3" stroke-width="1.5" marker-end="url(#arrowhead-blue)" />
+
+      <!-- =============================================== -->
+      <!-- ARROWS: Processing -> Storage (solid green)     -->
+      <!-- =============================================== -->
+      <!-- Spark -> PostgreSQL -->
+      <path d="M 750 115 L 750 250 L 110 250 L 110 312" stroke="#00b894" stroke-width="2" fill="none" marker-end="url(#arrowhead-green)" />
+      <!-- Flink -> Redis -->
+      <path d="M 910 115 L 910 250 L 640 250 L 640 340 L 340 340" stroke="#00b894" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-green)" />
+      <!-- Spark -> S3 -->
+      <path d="M 780 115 L 780 260 L 430 260 L 430 312" stroke="#00b894" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-green)" />
+      <!-- Enrichment -> Elasticsearch -->
+      <path d="M 910 205 L 910 270 L 110 270 L 110 402" stroke="#00b894" stroke-width="1.5" fill="none" stroke-dasharray="8,4" marker-end="url(#arrowhead-green)" />
+      <!-- Aggregator -> ClickHouse -->
+      <path d="M 1070 205 L 1070 270 L 640 270 L 640 440 L 340 440" stroke="#00b894" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-green)" />
+      <!-- ML Pipeline -> S3 -->
+      <path d="M 1070 115 L 1200 115 L 1200 260 L 500 260 L 500 340" stroke="#00b894" stroke-width="1.5" fill="none" stroke-dasharray="8,4" marker-end="url(#arrowhead-green)" />
+
+      <!-- =============================================== -->
+      <!-- ARROWS: Storage -> Serving (solid purple)       -->
+      <!-- =============================================== -->
+      <!-- PostgreSQL -> GraphQL -->
+      <path d="M 110 375 L 110 590 L 650 590 L 650 350 L 672 350" stroke="#6c5ce7" stroke-width="2" fill="none" marker-end="url(#arrowhead-purple)" />
+      <!-- Redis -> REST API -->
+      <path d="M 270 375 L 270 580 L 900 580 L 900 465" stroke="#6c5ce7" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-purple)" />
+      <!-- Elasticsearch -> Dashboard -->
+      <line x1="180" y1="437" x2="670" y2="437" stroke="#6c5ce7" stroke-width="1.5" marker-end="url(#arrowhead-purple)" />
+      <!-- ClickHouse -> Report Generator -->
+      <path d="M 340 437 L 640 437 L 640 475 L 1000 475 L 1000 465" stroke="#6c5ce7" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-purple)" />
+      <!-- S3 -> gRPC -->
+      <path d="M 500 347 L 640 347 L 640 347 L 992 347" stroke="#6c5ce7" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-purple)" />
+
+      <!-- =============================================== -->
+      <!-- ARROWS: cross-zone monitoring (dashed orange)   -->
+      <!-- =============================================== -->
+      <!-- Schema Registry -> Validator (dashed) -->
+      <line x1="340" y1="170" x2="670" y2="170" stroke="#e17055" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowhead-orange)" />
+      <!-- Notification Svc -> Kafka (feedback, dashed) -->
+      <path d="M 910 465 L 910 620 L 30 620 L 30 100 L 32 100" stroke="#e17055" stroke-width="1.5" fill="none" stroke-dasharray="6,4" marker-end="url(#arrowhead-orange)" />
+
+      <!-- =============================================== -->
+      <!-- Iceberg internal arrows                         -->
+      <!-- =============================================== -->
+      <line x1="270" y1="465" x2="270" y2="487" stroke="#00b894" stroke-width="1.5" marker-end="url(#arrowhead-green)" />
+      <line x1="430" y1="465" x2="310" y2="495" stroke="#00b894" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrowhead-green)" />
+
+      <!-- =============================== -->
+      <!-- LEGEND (bottom)                 -->
+      <!-- =============================== -->
+      <rect x="20" y="640" width="1260" height="50" rx="8" fill="#f8f9fa" stroke="#dfe6e9" stroke-width="1" />
+
+      <line x1="40" y1="665" x2="80" y2="665" stroke="#0984e3" stroke-width="2" />
+      <text x="90" y="669" font-size="12" fill="#636e72">Ingestion flow</text>
+
+      <line x1="220" y1="665" x2="260" y2="665" stroke="#00b894" stroke-width="2" />
+      <text x="270" y="669" font-size="12" fill="#636e72">Storage flow</text>
+
+      <line x1="400" y1="665" x2="440" y2="665" stroke="#6c5ce7" stroke-width="2" />
+      <text x="450" y="669" font-size="12" fill="#636e72">Serving flow</text>
+
+      <line x1="580" y1="665" x2="620" y2="665" stroke="#e17055" stroke-width="2" stroke-dasharray="6,4" />
+      <text x="630" y="669" font-size="12" fill="#636e72">Monitoring / feedback</text>
+
+      <line x1="820" y1="665" x2="860" y2="665" stroke="#00b894" stroke-width="2" stroke-dasharray="6,4" />
+      <text x="870" y="669" font-size="12" fill="#636e72">Async / secondary path</text>
+
+      <rect x="1050" y="655" width="20" height="16" rx="3" fill="#74b9ff" stroke="#0984e3" stroke-width="1" />
+      <rect x="1075" y="655" width="20" height="16" rx="3" fill="#fab1a0" stroke="#e17055" stroke-width="1" />
+      <rect x="1100" y="655" width="20" height="16" rx="3" fill="#55efc4" stroke="#00b894" stroke-width="1" />
+      <rect x="1125" y="655" width="20" height="16" rx="3" fill="#a29bfe" stroke="#6c5ce7" stroke-width="1" />
+      <text x="1155" y="669" font-size="12" fill="#636e72">Zones</text>
+    </svg>
+  </div>
+</div>
+</body>
+</html>
