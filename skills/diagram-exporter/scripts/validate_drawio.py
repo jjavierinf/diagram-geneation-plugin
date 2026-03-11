@@ -98,6 +98,38 @@ def strip_html(s):
     return ' '.join(stripper.parts).strip()
 
 
+class C4ObjectCell(Cell):
+    """Parsed <object> wrapper around mxCell for C4 elements.
+
+    C4 objects store text in attributes (c4Name, c4Description, c4Technology)
+    and use %placeholder% syntax in their label. We expose the attribute values
+    as plain_text so the validator can find them during text completeness checks.
+    """
+    def __init__(self, obj_el):
+        inner = obj_el.find('mxCell')
+        if inner is None:
+            # Fallback: treat as empty cell
+            super().__init__(obj_el)
+        else:
+            super().__init__(inner)
+        # Override id and value from the <object> element
+        self.id = obj_el.get('id', self.id)
+        self.value = obj_el.get('label', self.value)
+        # Collect C4 attribute values
+        self._c4_texts = []
+        for attr in ('c4Name', 'c4Type', 'c4Technology', 'c4Description'):
+            val = obj_el.get(attr, '').strip()
+            if val:
+                self._c4_texts.append(val)
+
+    @property
+    def plain_text(self):
+        """Return C4 attribute values as space-separated text."""
+        if self._c4_texts:
+            return ' '.join(self._c4_texts)
+        return strip_html(self.value)
+
+
 def parse_drawio(path):
     """Parse a .drawio file and return list of (tab_name, [Cell]) tuples."""
     tree = ET.parse(path)
@@ -106,12 +138,24 @@ def parse_drawio(path):
     for diagram in root.findall('diagram'):
         name = diagram.get('name', 'untitled')
         model = diagram.find('.//mxGraphModel')
-        if model is None:
-            # Try direct root element
-            cells = diagram.findall('.//mxCell')
-        else:
-            cells = model.findall('.//mxCell')
-        tabs.append((name, [Cell(c) for c in cells]))
+        search_root = model if model is not None else diagram
+
+        parsed_cells = []
+        # Parse <object> elements (C4 wrappers) first
+        # Track inner mxCell elements by identity to avoid double-counting
+        inner_mxcells = set()
+        for obj in search_root.findall('.//object'):
+            parsed_cells.append(C4ObjectCell(obj))
+            inner = obj.find('mxCell')
+            if inner is not None:
+                inner_mxcells.add(id(inner))
+
+        # Parse standalone mxCell elements (skip those inside <object>)
+        for c in search_root.findall('.//mxCell'):
+            if id(c) not in inner_mxcells:
+                parsed_cells.append(Cell(c))
+
+        tabs.append((name, parsed_cells))
     return tabs
 
 
